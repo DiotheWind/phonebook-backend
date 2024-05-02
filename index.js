@@ -33,6 +33,13 @@ app.get('/api/info', (request, response) => {
     response.send(`<p>Phonebook has info for ${persons.length} people</p> <p>${date}</p>`)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+
+    person ? response.json(person) : response.status(404).end()
+})
+
 const PORT = 3002
 app.listen(PORT, () => {
     console.log(`Server is listening to PORT ${PORT}...`)
