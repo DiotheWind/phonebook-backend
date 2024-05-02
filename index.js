@@ -52,12 +52,30 @@ const generateRandomId = () => {
     return Math.floor(Math.random() * 1000000)
 }
 
+const checkNameDuplicate = (personObj) => {
+    let isDuplicate = false
+    persons.forEach(person => {
+      if (person.name.toLowerCase() === personObj.name.toLowerCase()) isDuplicate = true
+    })
+
+    return isDuplicate
+}
+
 app.post('/api/persons', (request, response) => {
     const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'Name or Number missing' })
+    }
+
     const person = {
-        content: body.content,
-        important: body.important,
+        name: body.name,
+        number: body.number,
         id: generateRandomId()
+    }
+
+    if (checkNameDuplicate(person)) {
+        return response.status(400).json({ error: `${person.name} already exists in the phonebook` })
     }
 
     persons = persons.concat(person)
